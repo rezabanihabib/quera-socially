@@ -8,7 +8,7 @@ const ProtectRoute = () => {
   //     return <div>loading</div>;
   //   }
 
-  //   if (sessing) {
+  //   if (session) {
   //     return <Navigate to="/sign-in" replace />;
   //   }
   return <Outlet />;
