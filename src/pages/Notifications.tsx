@@ -1,12 +1,12 @@
 import { Link } from "react-router";
 
-const Register = () => {
+const Notifications = () => {
   return (
     <div>
-      <p>Register</p>
+      <p>Notifications</p>
       <Link to="/">home</Link>
     </div>
   );
 };
 
-export default Register;
+export default Notifications;
