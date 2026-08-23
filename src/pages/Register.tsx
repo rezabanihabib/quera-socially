@@ -1,12 +1,7 @@
-import { Link } from "react-router";
+import AuthPage from "../components/auth/AuthPage";
 
 const Register = () => {
-  return (
-    <div>
-      <p>Register</p>
-      <Link to="/">home</Link>
-    </div>
-  );
+  return <AuthPage mode="register" />;
 };
 
 export default Register;

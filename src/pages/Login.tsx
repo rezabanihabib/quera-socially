@@ -1,12 +1,7 @@
-import { Link } from "react-router";
+import AuthPage from "../components/auth/AuthPage";
 
 const Login = () => {
-  return (
-    <div>
-      <p>Login</p>
-      <Link to="/">home</Link>
-    </div>
-  );
+  return <AuthPage mode="login" />;
 };
 
 export default Login;
