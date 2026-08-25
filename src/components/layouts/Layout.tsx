@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Outlet } from "react-router";
+import { Navbar } from "./Navbar";
 
 const Layout = () => {
   const [loading, setLoading] = useState();
   return (
     <div>
-      {/* <Header /> */}
+      <Navbar />
       {/* <Sidebar /> */}
 
       {loading ? "is loading" : <Outlet />}
