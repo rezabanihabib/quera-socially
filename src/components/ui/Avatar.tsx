@@ -16,7 +16,6 @@ const sizeClasses = {
   xl: "h-20 w-20 text-3xl",
 };
 
-// Deterministic fallback color per name, echoing the green "S" avatar in the Figma file
 const PALETTE = ["#16a34a", "#2563eb", "#7c3aed", "#dc2626", "#d97706", "#0891b2"];
 
 function colorForName(name?: string | null) {
