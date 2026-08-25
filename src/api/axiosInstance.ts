@@ -1,8 +1,10 @@
 import axios, { type AxiosError } from "axios";
 import type { ApiError } from "../types";
 
+const Url = "https://socially-nextjs-six.vercel.app";
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: Url,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
