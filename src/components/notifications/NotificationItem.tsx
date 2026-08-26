@@ -64,7 +64,7 @@ export function NotificationItem({ notification }: { notification: AppNotificati
         )}
         <p className="mt-1 text-[11px] text-muted-foreground">{timeAgo(notification.createdAt)}</p>
       </div>
-      {!notification.read && <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-accent" />}
+      {!notification.read && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent" />}
     </div>
   );
 }
