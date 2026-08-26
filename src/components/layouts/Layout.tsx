@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import { useSession } from "@/hooks/useAuth";
 import { Outlet } from "react-router-dom";
+import { Navbar } from "./Navbar";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,6 +23,7 @@ export default function Layout() {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionBootstrap>
+        <Navbar />
         <Outlet />
         <Toaster
           position="bottom-center"
