@@ -92,7 +92,7 @@ export function CommentSection({ postId, comments = [] }: CommentSectionProps) {
             <p className="text-sm font-semibold text-foreground">You are signed out</p>
             <p className="text-xs text-muted-foreground">Sign in to write a comment</p>
           </div>
-          <LinkButton to="/login" variant="primary" size="sm" className="flex-shrink-0">
+          <LinkButton to="/login" variant="primary" size="sm" className="shrink-0">
             Sign in
           </LinkButton>
         </div>
