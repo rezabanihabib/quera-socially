@@ -57,7 +57,7 @@ export function WhoToFollow() {
               size="sm"
               variant={u.isFollowedByMe ? "tertiary" : "secondary"}
               onClick={() => toggleFollow.mutate(u)}
-              className="flex-shrink-0"
+              className="shrink-0"
             >
               {u.isFollowedByMe ? "Following" : "Follow"}
             </Button>
