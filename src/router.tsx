@@ -2,10 +2,11 @@ import { createBrowserRouter } from "react-router";
 import Layout from "./components/layouts/Layout";
 import App from "./App";
 import Profile from "./pages/Profile";
-import ProtectRoute from "./components/layouts/ProtectRoute";
 import Notifications from "./pages/Notifications";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import ProtectRoute from "./components/layouts/ProtectRoute";
+import GuestOnlyRoute  from "./components/layouts/GuestOnlyRoute";
 
 const router = createBrowserRouter([
   {
@@ -21,12 +22,17 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "register",
-    Component: Register,
-  },
-  {
-    path: "login",
-    Component: Login,
+    Component: GuestOnlyRoute,
+    children: [
+      {
+        path: "register",
+        Component: Register,
+      },
+      {
+        path: "login",
+        Component: Login,
+      },
+    ],
   },
 ]);
 
