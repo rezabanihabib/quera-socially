@@ -1,16 +1,13 @@
 import { Navigate, Outlet } from "react-router";
+import { useAuthStore } from "@/store/authStore";
+import { PageSpinner } from "@/components/ui/Feedback";
 
 const ProtectRoute = () => {
-  // const session = useSession((s) => s.session);
-  // const loading = useSession((s) => s.loading);
+  const { user, isInitialized } = useAuthStore();
 
-  //   if (loading) {
-  //     return <div>loading</div>;
-  //   }
+  if (!isInitialized) return <PageSpinner />;
+  if (!user) return <Navigate to="/login" replace />;
 
-  //   if (session) {
-  //     return <Navigate to="/sign-in" replace />;
-  //   }
   return <Outlet />;
 };
 

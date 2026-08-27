@@ -2,8 +2,9 @@ import { type ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import { useSession } from "@/hooks/useAuth";
-import { Outlet } from "react-router-dom";
-import { Navbar } from "./Navbar";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
+import { PageSpinner } from "../ui/Feedback";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,14 +17,18 @@ const queryClient = new QueryClient({
 
 function SessionBootstrap({ children }: { children: ReactNode }) {
   useSession();
+  const { user, isInitialized } = useAuthStore();
+
+  if (!isInitialized) return <PageSpinner />;
+  if (user) return <Navigate to="/" replace />;
+  
   return <>{children}</>;
 }
 
-export default function Layout() {
+export default function GuestOnlyRoute() {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionBootstrap>
-        <Navbar />
         <Outlet />
         <Toaster
           position="bottom-center"
