@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/Feedback";
 
 export function PostSkeleton() {
   return (
-    <div className="rounded-xl border border-border bg-surface p-4">
+    <div className="rounded-xl border border-border bg-surface p-4 shadow-card">
       <div className="flex items-center gap-3">
         <Skeleton className="h-10 w-10 rounded-full" />
         <div className="flex flex-col gap-2">

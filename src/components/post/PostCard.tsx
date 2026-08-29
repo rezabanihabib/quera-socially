@@ -25,15 +25,13 @@ export function PostCard({ post }: { post: Post }) {
   const deletePost = useDeletePost();
 
   return (
-    <article className="rounded-xl border border-border bg-surface p-4 transition-colors">
+    <article className="rounded-xl border border-border bg-surface p-4 shadow-card transition-colors">
       <div className="flex items-start justify-between">
         <Link to={`/profile/${post.author.username}`} className="flex items-center gap-3">
           <Avatar src={post.author.avatar} name={post.author.name} size="md" />
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-sm font-semibold text-foreground">{post.author.name}</span>
-              <span className="text-xs text-muted-foreground">@{displayHandle(post.author)}</span>
-            </div>
+          <div className="flex flex-wrap items-baseline gap-x-1.5">
+            <span className="text-sm font-semibold text-foreground">{post.author.name}</span>
+            <span className="text-xs text-muted-foreground">@{displayHandle(post.author)}</span>
             <span className="text-xs text-muted-foreground">{timeAgo(post.createdAt)}</span>
           </div>
         </Link>
@@ -87,12 +85,15 @@ export function PostCard({ post }: { post: Post }) {
           onClick={() => setShowComments((v) => !v)}
           className={cn(
             "flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium transition-colors",
+            showComments && "bg-accent/15",
             showComments
-              ? "bg-accent/15 text-accent"
+              ? "text-accent"
               : "text-muted-foreground hover:bg-surface-hover hover:text-foreground"
           )}
         >
-          <MessageCircle className="h-4 w-4" />
+          <MessageCircle
+            className={cn("h-4 w-4", showComments && "fill-accent")}
+          />
           {post.commentsCount}
         </button>
       </div>
