@@ -13,7 +13,7 @@ const ICONS: Record<AppNotification["type"], typeof Heart> = {
 const ICON_COLORS: Record<AppNotification["type"], string> = {
   like: "text-like",
   comment: "text-accent",
-  follow: "text-accent",
+  follow: "text-green-500",
 };
 
 function notificationText(n: AppNotification) {
@@ -27,20 +27,36 @@ function notificationText(n: AppNotification) {
   }
 }
 
-export function NotificationItem({ notification }: { notification: AppNotification }) {
+export function NotificationItem({
+  notification,
+}: {
+  notification: AppNotification;
+}) {
   const Icon = ICONS[notification.type];
-  const canLinkToActor = Boolean(notification.actor.id || notification.actor.username);
+  const canLinkToActor = Boolean(
+    notification.actor.id || notification.actor.username,
+  );
 
   return (
     <div
       className={cn(
         "flex gap-3 rounded-lg px-3 py-3 transition-colors",
-        !notification.read && "bg-surface-hover"
+        !notification.read && "bg-surface-hover",
       )}
     >
-      <Avatar src={notification.actor.avatar} name={notification.actor.name} size="sm" />
+      <Avatar
+        src={notification.actor.avatar}
+        name={notification.actor.name}
+        size="sm"
+      />
       <div className="min-w-0 flex-1">
         <p className="text-sm text-foreground">
+          <Icon
+            className={cn(
+              "mb-0.5 inline h-3.5 w-3.5",
+              ICON_COLORS[notification.type],
+            )}
+          />{" "}
           {canLinkToActor ? (
             <Link
               to={`/profile/${notification.actor.username}`}
@@ -51,20 +67,25 @@ export function NotificationItem({ notification }: { notification: AppNotificati
           ) : (
             <span className="font-semibold">{notification.actor.name}</span>
           )}{" "}
-          <Icon className={cn("mb-0.5 inline h-3.5 w-3.5", ICON_COLORS[notification.type])} />{" "}
           {notificationText(notification)}
         </p>
         {notification.post?.content && (
-          <p className="mt-0.5 truncate text-xs text-muted-foreground">{notification.post.content}</p>
+          <p className="mt-0.5 truncate text-xs text-muted-foreground">
+            {notification.post.content}
+          </p>
         )}
         {notification.commentPreview && (
           <p className="mt-1 rounded-md bg-muted px-2 py-1 text-xs text-foreground">
             {notification.commentPreview}
           </p>
         )}
-        <p className="mt-1 text-[11px] text-muted-foreground">{timeAgo(notification.createdAt)}</p>
+        <p className="mt-1 text-[11px] text-muted-foreground">
+          {timeAgo(notification.createdAt)}
+        </p>
       </div>
-      {!notification.read && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent" />}
+      {!notification.read && (
+        <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent" />
+      )}
     </div>
   );
 }

@@ -12,11 +12,18 @@ const sizeClasses = {
   xs: "h-6 w-6 text-xs",
   sm: "h-8 w-8 text-sm",
   md: "h-10 w-10 text-base",
-  lg: "h-16 w-16 text-2xl",
-  xl: "h-20 w-20 text-3xl",
+  lg: "h-[59px] w-[59px] text-2xl",
+  xl: "h-[69px] w-[69px] text-3xl",
 };
 
-const PALETTE = ["#16a34a", "#2563eb", "#7c3aed", "#dc2626", "#d97706", "#0891b2"];
+const PALETTE = [
+  "#16a34a",
+  "#2563eb",
+  "#7c3aed",
+  "#dc2626",
+  "#d97706",
+  "#0891b2",
+];
 
 function colorForName(name?: string | null) {
   if (!name) return PALETTE[0];
@@ -30,7 +37,11 @@ export function Avatar({ src, name, size = "md", className }: AvatarProps) {
       <img
         src={src}
         alt={name ?? "avatar"}
-        className={cn("rounded-full object-cover flex-shrink-0", sizeClasses[size], className)}
+        className={cn(
+          "rounded-full object-cover shrink-0",
+          sizeClasses[size],
+          className,
+        )}
       />
     );
   }
@@ -38,9 +49,9 @@ export function Avatar({ src, name, size = "md", className }: AvatarProps) {
   return (
     <div
       className={cn(
-        "flex items-center justify-center rounded-full font-semibold text-white flex-shrink-0",
+        "flex items-center justify-center rounded-full font-semibold text-white shrink-0",
         sizeClasses[size],
-        className
+        className,
       )}
       style={{ backgroundColor: colorForName(name) }}
     >

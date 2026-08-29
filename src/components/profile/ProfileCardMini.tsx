@@ -8,19 +8,28 @@ export function ProfileCardMini({ user }: { user: User }) {
   return (
     <Link
       to={`/profile/${user.username}`}
-      className="block rounded-xl border border-border bg-surface p-5 text-center transition-colors hover:bg-surface-hover"
+      className="block rounded-xl border border-border bg-surface px-6 py-[62px] text-center shadow-card transition-colors hover:bg-surface-hover"
     >
-      <Avatar src={user.avatar} name={user.name} size="lg" className="mx-auto" />
+      <Avatar
+        src={user.avatar}
+        name={user.name}
+        size="lg"
+        className="mx-auto"
+      />
       <p className="mt-3 text-sm font-semibold text-foreground">{user.name}</p>
-      <p className="text-xs text-muted-foreground">@{displayHandle(user)}</p>
+      <p className="text-xs text-muted-foreground">{displayHandle(user)}</p>
 
       <div className="mt-4 grid grid-cols-2 gap-2 border-y border-border py-3">
         <div>
-          <p className="text-sm font-semibold text-foreground">{user.followingCount}</p>
-          <p className="text-[11px] text-muted-foreground">Following</p>
+          <p className="text-sm font-semibold text-foreground">
+            {user.followingCount}
+          </p>
+          <p className="text-[11px] text-muted-foreground">Followings</p>
         </div>
         <div>
-          <p className="text-sm font-semibold text-foreground">{user.followersCount}</p>
+          <p className="text-sm font-semibold text-foreground">
+            {user.followersCount}
+          </p>
           <p className="text-[11px] text-muted-foreground">Followers</p>
         </div>
       </div>

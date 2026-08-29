@@ -37,27 +37,34 @@ export function PostComposer() {
   };
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-4">
-      <div className="flex gap-3">
+    <div className="rounded-xl border border-border bg-surface p-4 shadow-card">
+      <div className="flex items-center gap-3">
         <Avatar src={user?.avatar} name={user?.name} size="md" />
 
         <div className="flex-1">
           <TextArea
-            rows={3}
-            placeholder="What's on your mind?"
+            variant="plain"
+            rows={1}
+            placeholder="Whats on your mind?"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            error={isTooShort ? `At least ${MIN_POST_LENGTH} characters needed` : undefined}
+            error={
+              isTooShort
+                ? `At least ${MIN_POST_LENGTH} characters needed`
+                : undefined
+            }
           />
         </div>
       </div>
 
-      <div className="mt-3 flex justify-end">
+      <div className="my-3 border-t border-border" />
+
+      <div className="flex justify-end">
         <Button
           onClick={handleSubmit}
           isLoading={createPost.isPending}
           disabled={trimmedLength < MIN_POST_LENGTH || createPost.isPending}
-          variant="secondary"
+          variant="primary"
         >
           <Send className="h-4 w-4" />
           Post

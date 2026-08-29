@@ -35,7 +35,7 @@ export function CommentSection({ postId, comments = [] }: CommentSectionProps) {
       { postId, content: trimmed },
       {
         onSuccess: () => setContent(""),
-      }
+      },
     );
   };
 
@@ -43,12 +43,22 @@ export function CommentSection({ postId, comments = [] }: CommentSectionProps) {
     <div className="mt-3 border-t border-border pt-3">
       {comments.map((comment) => (
         <div key={comment.id} className="mb-3 flex gap-2.5">
-          <Avatar src={comment.author.avatar} name={comment.author.name} size="sm" />
+          <Avatar
+            src={comment.author.avatar}
+            name={comment.author.name}
+            size="sm"
+          />
           <div className="flex-1 rounded-lg bg-muted px-3 py-2">
             <div className="flex items-baseline gap-2">
-              <span className="text-xs font-semibold text-foreground">{comment.author.name}</span>
-              <span className="text-[11px] text-muted-foreground">@{displayHandle(comment.author)}</span>
-              <span className="text-[11px] text-muted-foreground">· {timeAgo(comment.createdAt)}</span>
+              <span className="text-xs font-semibold text-foreground">
+                {comment.author.name}
+              </span>
+              <span className="text-[11px] text-muted-foreground">
+                @{displayHandle(comment.author)}
+              </span>
+              <span className="text-[11px] text-muted-foreground">
+                · {timeAgo(comment.createdAt)}
+              </span>
             </div>
             <p className="mt-0.5 text-sm text-foreground">{comment.content}</p>
           </div>
@@ -64,7 +74,11 @@ export function CommentSection({ postId, comments = [] }: CommentSectionProps) {
               placeholder="Write a comment..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              error={isTooShort ? `At least ${MIN_COMMENT_LENGTH} characters needed` : undefined}
+              error={
+                isTooShort
+                  ? `At least ${MIN_COMMENT_LENGTH} characters needed`
+                  : undefined
+              }
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
@@ -75,7 +89,7 @@ export function CommentSection({ postId, comments = [] }: CommentSectionProps) {
             <div className="mt-2 flex justify-end">
               <Button
                 size="sm"
-                variant="secondary"
+                variant="primary"
                 onClick={handleSubmit}
                 isLoading={addComment.isPending}
                 disabled={trimmedLength < MIN_COMMENT_LENGTH}
@@ -89,10 +103,19 @@ export function CommentSection({ postId, comments = [] }: CommentSectionProps) {
       ) : (
         <div className="flex items-center justify-between gap-3 rounded-lg bg-muted px-4 py-3">
           <div>
-            <p className="text-sm font-semibold text-foreground">You are signed out</p>
-            <p className="text-xs text-muted-foreground">Sign in to write a comment</p>
+            <p className="text-sm font-semibold text-foreground">
+              You are signed out
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Sign in to write a comment
+            </p>
           </div>
-          <LinkButton to="/login" variant="primary" size="sm" className="shrink-0">
+          <LinkButton
+            to="/login"
+            variant="primary"
+            size="sm"
+            className="shrink-0"
+          >
             Sign in
           </LinkButton>
         </div>

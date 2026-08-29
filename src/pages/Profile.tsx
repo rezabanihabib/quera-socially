@@ -1,11 +1,9 @@
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { FileText, Heart } from "lucide-react";
 import { useUserProfile, useUserPosts, useUserLikes } from "@/hooks/useUsers";
 import { useAuthStore } from "@/store/authStore";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ProfileCardMini } from "@/components/profile/ProfileCardMini";
-import { WhoToFollow } from "@/components/profile/WhoToFollow";
 import { PostCard } from "@/components/post/PostCard";
 import { PostSkeleton } from "@/components/post/PostSkeleton";
 import { EmptyState, PageSpinner } from "@/components/ui/Feedback";
@@ -35,33 +33,59 @@ export default function ProfilePage() {
     );
   }
 
+  const isOwnProfile = currentUser?.id === profile.id;
   const activeList = tab === "posts" ? posts : likes;
   const activeLoading = tab === "posts" ? postsLoading : likesLoading;
 
+  const emptyCopy =
+    tab === "posts"
+      ? {
+          title: "There is no post",
+          description: isOwnProfile
+            ? "You haven't posted anything"
+            : "This user not posted anything",
+        }
+      : {
+          title: "There is no likes",
+          description: isOwnProfile
+            ? "You haven't liked anything"
+            : "This user hasn't liked anything",
+        };
+
   return (
-    <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 px-4 py-6 md:grid-cols-[240px_1fr_260px]">
-      <div className="md:sticky md:top-20 md:h-fit">
+    <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 px-4 py-6 md:grid-cols-[296px_1fr]">
+      <div className="hidden md:sticky md:top-24 md:block md:h-fit">
         {currentUser && <ProfileCardMini user={currentUser} />}
       </div>
 
       <div className="flex flex-col gap-4">
-        <ProfileHeader profile={profile} />
+        <div className="mx-auto w-full max-w-lg">
+          <ProfileHeader profile={profile} />
+        </div>
 
-        <div className="flex gap-1 border-b border-border">
-          <TabButton
-            active={tab === "posts"}
+        <div className="flex rounded-lg bg-muted p-1">
+          <button
             onClick={() => setTab("posts")}
-            icon={FileText}
+            className={cn(
+              "flex-1 rounded-md py-2 text-sm font-semibold transition-colors",
+              tab === "posts"
+                ? "bg-surface text-foreground shadow-card"
+                : "text-muted-foreground hover:text-foreground",
+            )}
           >
             Posts
-          </TabButton>
-          <TabButton
-            active={tab === "likes"}
+          </button>
+          <button
             onClick={() => setTab("likes")}
-            icon={Heart}
+            className={cn(
+              "flex-1 rounded-md py-2 text-sm font-semibold transition-colors",
+              tab === "likes"
+                ? "bg-surface text-foreground shadow-card"
+                : "text-muted-foreground hover:text-foreground",
+            )}
           >
             Likes
-          </TabButton>
+          </button>
         </div>
 
         {activeLoading && (
@@ -72,49 +96,16 @@ export default function ProfilePage() {
         )}
 
         {!activeLoading && activeList?.length === 0 && (
-          <EmptyState
-            icon={tab === "posts" ? FileText : Heart}
-            title={
-              tab === "posts" ? "No Posts to Show" : "No Liked Posts to Show"
-            }
-          />
+          <div className="rounded-xl bg-primary px-4 py-3 text-primary-foreground">
+            <p className="text-sm font-bold">{emptyCopy.title}</p>
+            <p className="text-xs opacity-80">{emptyCopy.description}</p>
+          </div>
         )}
 
         {activeList?.map((post) => (
           <PostCard key={post.id} post={post} />
         ))}
       </div>
-
-      <div className="md:sticky md:top-20 md:h-fit">
-        <WhoToFollow />
-      </div>
     </div>
-  );
-}
-
-function TabButton({
-  active,
-  onClick,
-  icon: Icon,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  icon: typeof FileText;
-  children: ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "flex items-center gap-1.5 border-b-2 px-3 py-2 text-sm font-medium transition-colors",
-        active
-          ? "border-foreground text-foreground"
-          : "border-transparent text-muted-foreground hover:text-foreground",
-      )}
-    >
-      <Icon className="h-3.5 w-3.5" />
-      {children}
-    </button>
   );
 }
