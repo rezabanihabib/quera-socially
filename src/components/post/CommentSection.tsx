@@ -75,7 +75,7 @@ export function CommentSection({ postId, comments = [] }: CommentSectionProps) {
             <div className="mt-2 flex justify-end">
               <Button
                 size="sm"
-                variant="secondary"
+                variant="primary"
                 onClick={handleSubmit}
                 isLoading={addComment.isPending}
                 disabled={trimmedLength < MIN_COMMENT_LENGTH}

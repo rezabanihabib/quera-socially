@@ -13,7 +13,7 @@ const ICONS: Record<AppNotification["type"], typeof Heart> = {
 const ICON_COLORS: Record<AppNotification["type"], string> = {
   like: "text-like",
   comment: "text-accent",
-  follow: "text-accent",
+  follow: "text-green-500",
 };
 
 function notificationText(n: AppNotification) {
@@ -41,6 +41,7 @@ export function NotificationItem({ notification }: { notification: AppNotificati
       <Avatar src={notification.actor.avatar} name={notification.actor.name} size="sm" />
       <div className="min-w-0 flex-1">
         <p className="text-sm text-foreground">
+          <Icon className={cn("mb-0.5 inline h-3.5 w-3.5", ICON_COLORS[notification.type])} />{" "}
           {canLinkToActor ? (
             <Link
               to={`/profile/${notification.actor.username}`}
@@ -51,7 +52,6 @@ export function NotificationItem({ notification }: { notification: AppNotificati
           ) : (
             <span className="font-semibold">{notification.actor.name}</span>
           )}{" "}
-          <Icon className={cn("mb-0.5 inline h-3.5 w-3.5", ICON_COLORS[notification.type])} />{" "}
           {notificationText(notification)}
         </p>
         {notification.post?.content && (

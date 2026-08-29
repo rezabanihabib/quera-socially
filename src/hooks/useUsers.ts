@@ -66,15 +66,7 @@ export function useToggleFollow() {
             : old,
       );
 
-      // Remove the just-followed person from "Who to Follow" instead of
-      // just flipping their button — the widget always shows fresh
-      // suggestions, not people already followed. On unfollow there's
-      // nothing to remove (they weren't in the recommend list already).
-      if (nextFollowed) {
-        queryClient.setQueryData<User[]>(["users", "recommend"], (old) =>
-          old ? old.filter((u) => u.id !== user.id) : old,
-        );
-      } else {
+      if (!nextFollowed) {
         queryClient.setQueryData<User[]>(["users", "recommend"], (old) =>
           old
             ? old.map((u) =>
@@ -90,10 +82,6 @@ export function useToggleFollow() {
         );
       }
 
-      // My own followingCount (shown in the left mini profile card, which
-      // reads from the session/authStore user) needs to move too — it
-      // wasn't being touched before, so it only "updated" after a full
-      // page refresh re-fetched the session from scratch.
       const previousMe = useAuthStore.getState().user;
       if (previousMe) {
         const updatedMe: User = {
@@ -111,9 +99,6 @@ export function useToggleFollow() {
     },
     onSuccess: (_result, user) => {
       if (!user.isFollowedByMe) {
-        // We just followed someone and removed them from the recommend
-        // list — refetch so a new suggestion backfills the slot, keeping
-        // the widget at a full set of suggestions.
         queryClient.invalidateQueries({ queryKey: ["users", "recommend"] });
       }
     },

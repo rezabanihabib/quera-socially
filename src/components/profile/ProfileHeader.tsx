@@ -15,15 +15,15 @@ export function ProfileHeader({ profile }: { profile: User }) {
   const [editOpen, setEditOpen] = useState(false);
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-6 text-center">
+    <div className="rounded-xl border border-border bg-surface px-6 py-[62px] text-center shadow-card">
       <Avatar src={profile.avatar} name={profile.name} size="xl" className="mx-auto" />
       <h1 className="mt-3 text-xl font-bold text-foreground">{profile.name}</h1>
-      <p className="text-sm text-muted-foreground">@{displayHandle(profile)}</p>
+      <p className="text-sm text-muted-foreground">{displayHandle(profile)}</p>
 
       <div className="mx-auto mt-4 grid max-w-xs grid-cols-3 gap-2">
         <div>
           <p className="text-sm font-semibold text-foreground">{profile.followingCount}</p>
-          <p className="text-[11px] text-muted-foreground">Following</p>
+          <p className="text-[11px] text-muted-foreground">Followings</p>
         </div>
         <div>
           <p className="text-sm font-semibold text-foreground">{profile.followersCount}</p>
@@ -52,23 +52,19 @@ export function ProfileHeader({ profile }: { profile: User }) {
         )}
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-        <span className="flex items-center gap-1.5">
+      <div className="mt-4 space-y-1.5 text-left text-xs text-muted-foreground">
+        <div className="flex items-center gap-1.5">
+          <MapPin className="h-3.5 w-3.5" />
+          {profile.location || "No location"}
+        </div>
+        <div className="flex items-center gap-1.5">
+          <Link2 className="h-3.5 w-3.5" />
+          {profile.website || "No website"}
+        </div>
+        <div className="flex items-center gap-1.5">
           <Calendar className="h-3.5 w-3.5" />
           {formatJoinDate(profile.createdAt)}
-        </span>
-        {profile.location && (
-          <span className="flex items-center gap-1.5">
-            <MapPin className="h-3.5 w-3.5" />
-            {profile.location}
-          </span>
-        )}
-        {profile.website && (
-          <span className="flex items-center gap-1.5">
-            <Link2 className="h-3.5 w-3.5" />
-            {profile.website}
-          </span>
-        )}
+        </div>
       </div>
 
       {profile.bio && <p className="mt-3 text-sm text-foreground">{profile.bio}</p>}
