@@ -8,7 +8,7 @@ import { ProfileCardMini } from "@/components/profile/ProfileCardMini";
 import { EmptyState, Skeleton } from "@/components/ui/Feedback";
 import { useAuthStore } from "@/store/authStore";
 
-export default function NotificationsPage() {
+export default function Notifications() {
   const user = useAuthStore((s) => s.user);
   const { data: notifications, isLoading } = useNotifications();
   const markRead = useMarkNotificationsRead();
@@ -18,22 +18,18 @@ export default function NotificationsPage() {
   const unreadCount = unreadIds.length;
 
   return (
-    <div className="mx-auto grid max-w-4xl grid-cols-1 gap-4 px-4 py-6 md:grid-cols-[240px_1fr]">
-      <div className="md:sticky md:top-20 md:h-fit">
+    <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 px-4 py-6 md:grid-cols-[296px_1fr]">
+      <div className="hidden md:sticky md:top-24 md:block md:h-fit">
         {user && <ProfileCardMini user={user} />}
       </div>
 
-      <div className="rounded-xl border border-border bg-surface p-4">
+      <div className="rounded-xl border border-border bg-surface p-4 shadow-card">
         <div className="mb-3 flex items-center justify-between gap-3">
-          <h1 className="text-sm font-semibold text-foreground">
-            Notifications
-          </h1>
+          <h1 className="text-base font-bold text-foreground">Notifications</h1>
           <div className="flex items-center gap-3">
-            {unreadCount > 0 && (
-              <span className="text-xs text-muted-foreground">
-                {unreadCount} unread
-              </span>
-            )}
+            <span className="text-xs text-muted-foreground">
+              {unreadCount} unread
+            </span>
             {unreadCount > 0 && (
               <button
                 type="button"

@@ -2,7 +2,13 @@ import { type ButtonHTMLAttributes, forwardRef } from "react";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "secondary" | "tertiary" | "pure" | "danger" | "outline";
+type Variant =
+  | "primary"
+  | "secondary"
+  | "tertiary"
+  | "pure"
+  | "danger"
+  | "outline";
 type Size = "sm" | "md" | "lg" | "icon";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -16,7 +22,8 @@ const variantClasses: Record<Variant, string> = {
   secondary: "bg-secondary text-secondary-foreground hover:bg-secondary-hover",
   tertiary: "bg-tertiary text-tertiary-foreground hover:opacity-80",
   pure: "bg-transparent text-foreground hover:bg-surface-hover",
-  outline: "bg-transparent border border-border text-foreground hover:bg-surface-hover",
+  outline:
+    "bg-transparent border border-border text-foreground hover:bg-surface-hover",
   danger: "bg-danger text-white hover:bg-danger-hover",
 };
 
@@ -28,7 +35,18 @@ const sizeClasses: Record<Size, string> = {
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "primary", size = "md", isLoading, disabled, children, ...props }, ref) => {
+  (
+    {
+      className,
+      variant = "primary",
+      size = "md",
+      isLoading,
+      disabled,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
     return (
       <button
         ref={ref}
@@ -39,7 +57,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-foreground/30",
           variantClasses[variant],
           sizeClasses[size],
-          className
+          className,
         )}
         {...props}
       >
@@ -47,6 +65,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {children}
       </button>
     );
-  }
+  },
 );
 Button.displayName = "Button";

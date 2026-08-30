@@ -12,7 +12,7 @@ import { Rss } from "lucide-react";
 
 function ProfileCardMiniSkeleton() {
   return (
-    <div className="rounded-xl border border-border bg-surface p-5 text-center">
+    <div className="rounded-xl border border-border bg-surface p-5 text-center shadow-card">
       <Skeleton className="mx-auto h-16 w-16 rounded-full" />
       <Skeleton className="mx-auto mt-3 h-3 w-24" />
       <Skeleton className="mx-auto mt-2 h-2.5 w-16" />
@@ -26,8 +26,8 @@ function ProfileCardMiniSkeleton() {
 
 function HomeLoadingState() {
   return (
-    <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 px-4 py-6 md:grid-cols-[240px_1fr_260px]">
-      <div className="md:sticky md:top-20 md:h-fit">
+    <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 px-4 py-6 md:grid-cols-[296px_1fr_296px]">
+      <div className="hidden md:sticky md:top-24 md:block md:h-fit">
         <ProfileCardMiniSkeleton />
       </div>
       <div className="flex flex-col gap-4">
@@ -45,7 +45,7 @@ function LoggedOutHome() {
 
   return (
     <div className="mx-auto grid max-w-4xl grid-cols-1 gap-4 px-4 py-6 md:grid-cols-[280px_1fr]">
-      <div className="rounded-xl border border-border bg-surface p-6 text-center md:sticky md:top-20 md:h-fit">
+      <div className="hidden rounded-xl border border-border bg-surface p-6 text-center shadow-card md:sticky md:top-24 md:block md:h-fit">
         <h2 className="text-lg font-semibold text-foreground">Welcome Back!</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Login to access your profile and connect with others.
@@ -83,8 +83,8 @@ function LoggedInHome() {
   const { data: posts, isLoading, isError, error, refetch } = useFeed();
 
   return (
-    <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 px-4 py-6 md:grid-cols-[240px_1fr_260px]">
-      <div className="md:sticky md:top-20 md:h-fit">
+    <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 px-4 py-6 md:grid-cols-[296px_1fr_296px]">
+      <div className="hidden md:sticky md:top-24 md:block md:h-fit">
         {user && <ProfileCardMini user={user} />}
       </div>
 
@@ -129,14 +129,14 @@ function LoggedInHome() {
         ))}
       </div>
 
-      <div className="md:sticky md:top-20 md:h-fit">
+      <div className="hidden md:sticky md:top-24 md:block md:h-fit">
         <WhoToFollow />
       </div>
     </div>
   );
 }
 
-export default function HomePage() {
+export default function App() {
   const { user, isInitialized } = useAuthStore();
   if (!isInitialized) return <HomeLoadingState />;
   return user ? <LoggedInHome /> : <LoggedOutHome />;
