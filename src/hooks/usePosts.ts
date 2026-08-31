@@ -130,6 +130,30 @@ export function useToggleLike() {
   });
 }
 
+export function useUpdatePost() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      postId,
+      content,
+      image,
+    }: {
+      postId: string;
+      content?: string;
+      image?: string | null;
+    }) => postsApi.updatePost(postId, { content, image }),
+    onSuccess: (updatedPost) => {
+      patchPostEverywhere(queryClient, updatedPost.id, {
+        content: updatedPost.content,
+        image: updatedPost.image,
+      });
+      toast.success("Post updated");
+    },
+    onError: (error: ApiError) =>
+      toast.error(error.message || "Could not update post."),
+  });
+}
+
 export function useAddComment() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -153,5 +177,76 @@ export function useAddComment() {
     },
     onError: (error: ApiError) =>
       toast.error(error.message || "Could not add comment."),
+  });
+}
+
+export function useUpdateComment() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      postId,
+      commentId,
+      content,
+    }: {
+      postId: string;
+      commentId: string;
+      content: string;
+    }) => postsApi.updateComment(postId, commentId, content),
+    onSuccess: (updatedComment, { postId, commentId }) => {
+      const updater = (old?: Post[]) =>
+        Array.isArray(old)
+          ? old.map((p) =>
+              p.id === postId
+                ? {
+                    ...p,
+                    comments: (p.comments ?? []).map((c) =>
+                      c.id === commentId
+                        ? { ...c, content: updatedComment.content }
+                        : c,
+                    ),
+                  }
+                : p,
+            )
+          : old;
+      queryClient.setQueriesData<Post[]>({ queryKey: ["posts"] }, updater);
+      queryClient.setQueriesData<Post[]>({ queryKey: ["users"] }, updater);
+      toast.success("Comment updated");
+    },
+    onError: (error: ApiError) =>
+      toast.error(error.message || "Could not update comment."),
+  });
+}
+
+export function useDeleteComment() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      postId,
+      commentId,
+    }: {
+      postId: string;
+      commentId: string;
+    }) => postsApi.deleteComment(postId, commentId),
+    onSuccess: (_data, { postId, commentId }) => {
+      const updater = (old?: Post[]) =>
+        Array.isArray(old)
+          ? old.map((p) =>
+              p.id === postId
+                ? {
+                    ...p,
+                    commentsCount: Math.max(0, p.commentsCount - 1),
+                    comments: (p.comments ?? []).filter(
+                      (c) => c.id !== commentId,
+                    ),
+                  }
+                : p,
+            )
+          : old;
+      queryClient.setQueriesData<Post[]>({ queryKey: ["posts"] }, updater);
+      queryClient.setQueriesData<Post[]>({ queryKey: ["users"] }, updater);
+      toast.success("Comment deleted");
+    },
+    onError: (error: ApiError) =>
+      toast.error(error.message || "Could not delete comment."),
   });
 }

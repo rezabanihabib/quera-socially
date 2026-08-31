@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { getInitial } from "@/lib/utils";
+import defaultAvatar from "@/img/avatar-placeholder.webp";
 
 interface AvatarProps {
   src?: string | null;
@@ -9,53 +9,24 @@ interface AvatarProps {
 }
 
 const sizeClasses = {
-  xs: "h-6 w-6 text-xs",
-  sm: "h-8 w-8 text-sm",
-  md: "h-10 w-10 text-base",
-  lg: "h-[59px] w-[59px] text-2xl",
-  xl: "h-[69px] w-[69px] text-3xl",
+  xs: "h-6 w-6",
+  sm: "h-8 w-8",
+  md: "h-10 w-10",
+  lg: "h-[59px] w-[59px]",
+  xl: "h-[69px] w-[69px]",
 };
 
-const PALETTE = [
-  "#16a34a",
-  "#2563eb",
-  "#7c3aed",
-  "#dc2626",
-  "#d97706",
-  "#0891b2",
-];
-
-function colorForName(name?: string | null) {
-  if (!name) return PALETTE[0];
-  const code = name.charCodeAt(0) || 0;
-  return PALETTE[code % PALETTE.length];
-}
-
 export function Avatar({ src, name, size = "md", className }: AvatarProps) {
-  if (src) {
-    return (
-      <img
-        src={src}
-        alt={name ?? "avatar"}
-        className={cn(
-          "rounded-full object-cover shrink-0",
-          sizeClasses[size],
-          className,
-        )}
-      />
-    );
-  }
-
   return (
-    <div
-      className={cn(
-        "flex items-center justify-center rounded-full font-semibold text-white shrink-0",
-        sizeClasses[size],
-        className,
-      )}
-      style={{ backgroundColor: colorForName(name) }}
-    >
-      {getInitial(name)}
-    </div>
+    <img
+      src={src || defaultAvatar}
+      alt={name ?? "avatar"}
+      className={cn("rounded-full object-cover shrink-0 bg-muted", sizeClasses[size], className)}
+      onError={(e) => {
+        const img = e.currentTarget;
+        if (img.src === defaultAvatar) return;
+        img.src = defaultAvatar;
+      }}
+    />
   );
 }

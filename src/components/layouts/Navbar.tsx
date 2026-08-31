@@ -1,11 +1,22 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Bell, Home, LogOut, Menu, Moon, Sun, User, X } from "lucide-react";
+import {
+  Bell,
+  Home,
+  LogOut,
+  Menu,
+  Moon,
+  Search,
+  Sun,
+  User,
+  X,
+} from "lucide-react";
 import { useThemeStore } from "@/store/themeStore";
 import { useAuthStore } from "@/store/authStore";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useLogout } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
+import { SearchModal } from "@/components/users/SearchModal";
 
 export function Navbar() {
   const { theme, toggleTheme } = useThemeStore();
@@ -15,6 +26,7 @@ export function Navbar() {
   const logout = useLogout();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const handleLogout = () => {
     setMenuOpen(false);
@@ -31,11 +43,11 @@ export function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-border bg-surface/95 backdrop-blur">
-        <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4">
+      <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
+        <div className="flex h-20 items-center justify-between px-6 sm:px-10">
           <Link
             to="/"
-            className="font-logo text-lg font-bold tracking-tight text-foreground"
+            className="font-logo text-2xl font-bold tracking-tight text-foreground"
           >
             Socially
           </Link>
@@ -59,6 +71,13 @@ export function Navbar() {
               <>
                 {/* Desktop nav links */}
                 <nav className="hidden items-center gap-1 md:flex">
+                  <button
+                    onClick={() => setSearchOpen(true)}
+                    aria-label="Search people"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground"
+                  >
+                    <Search className="h-4 w-4" />
+                  </button>
                   <NavLink to="/" className={navLinkClass} end>
                     <Home className="h-4 w-4" />
                     <span>Home</span>
@@ -94,6 +113,13 @@ export function Navbar() {
 
                 {/* Mobile hamburger trigger */}
                 <button
+                  onClick={() => setSearchOpen(true)}
+                  aria-label="Search people"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground md:hidden"
+                >
+                  <Search className="h-4 w-4" />
+                </button>
+                <button
                   onClick={() => setMenuOpen(true)}
                   aria-label="Open menu"
                   className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground md:hidden"
@@ -113,12 +139,6 @@ export function Navbar() {
         </div>
       </header>
 
-      {/*
-        Mobile menu drawer — rendered as a SIBLING of <header>, not nested inside it.
-        <header> has backdrop-blur (backdrop-filter), which per the CSS spec becomes the
-        containing block for fixed-position descendants. Nesting the drawer inside it
-        would pin "fixed inset-0" to the header's own small box instead of the viewport.
-      */}
       {menuOpen && user && (
         <div className="fixed inset-0 z-50 md:hidden">
           <div
@@ -190,6 +210,8 @@ export function Navbar() {
           </div>
         </div>
       )}
+
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }

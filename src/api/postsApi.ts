@@ -1,6 +1,10 @@
 import { api } from "@/api/axiosInstance";
 import { useAuthStore } from "@/store/authStore";
-import { generateUsernameFromEmail, isPostLikedByUser } from "@/lib/utils";
+import {
+  generateUsernameFromEmail,
+  isPostLikedByUser,
+  resolveImageUrl,
+} from "@/lib/utils";
 import type { Comment, Post } from "@/types";
 
 type RawAuthor = {
@@ -66,7 +70,7 @@ function normalizeAuthor(
       fallbackId ??
       "user",
     name: author?.name ?? author?.username ?? "User",
-    avatar: author?.avatar ?? author?.image ?? null,
+    avatar: resolveImageUrl(author?.avatar ?? author?.image),
   };
 }
 
@@ -97,7 +101,7 @@ export function normalizePost(post: RawPost): Post {
   return {
     id: post.id ?? "",
     content: post.content ?? "",
-    image: post.image ?? null,
+    image: resolveImageUrl(post.image),
 
     author: normalizeAuthor(post.author, post.authorId),
 
@@ -181,6 +185,23 @@ export const postsApi = {
   },
 
   // --------------------------------------------------
+  // PUT /api/posts/:id
+  // --------------------------------------------------
+
+  updatePost: async (
+    postId: string,
+    payload: { content?: string; image?: string | null },
+  ): Promise<Post> => {
+    const body: Record<string, unknown> = {};
+    if (payload.content !== undefined) body.content = payload.content;
+    if (payload.image) body.image = payload.image;
+
+    const { data } = await api.put(`/api/posts/${postId}`, body);
+    const rawPost = data?.data?.post ?? data?.post ?? data?.data ?? data;
+    return normalizePost(rawPost);
+  },
+
+  // --------------------------------------------------
   // PATCH /api/posts/:id
   // --------------------------------------------------
 
@@ -250,5 +271,39 @@ export const postsApi = {
               }
             : normalized.author,
     };
+  },
+
+  // --------------------------------------------------
+  // PUT /api/posts/:postId/comment/:commentId
+  // --------------------------------------------------
+
+  updateComment: async (
+    postId: string,
+    commentId: string,
+    content: string,
+  ): Promise<Comment> => {
+    const { data } = await api.put(
+      `/api/posts/${postId}/comment/${commentId}`,
+      { content },
+    );
+
+    const rawComment =
+      data?.data?.comment ?? data?.comment ?? data?.data ?? data;
+
+    const normalized = normalizeComment(rawComment);
+
+    return {
+      ...normalized,
+      id: normalized.id || commentId,
+      content: rawComment?.content ?? content,
+    };
+  },
+
+  // --------------------------------------------------
+  // DELETE /api/posts/:postId/comment/:commentId
+  // --------------------------------------------------
+
+  deleteComment: async (postId: string, commentId: string): Promise<void> => {
+    await api.delete(`/api/posts/${postId}/comment/${commentId}`);
   },
 };

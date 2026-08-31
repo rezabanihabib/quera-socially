@@ -12,7 +12,7 @@ export function WhoToFollow() {
   if (isLoading || (isFetching && (!users || users.length === 0))) {
     return (
       <div className="rounded-xl border border-border bg-surface p-4 shadow-card">
-        <p className="mb-3 text-base font-bold text-foreground">
+        <p className="mb-5 text-base font-bold text-foreground">
           Recommended users
         </p>
         {[1, 2, 3].map((i) => (
@@ -33,7 +33,7 @@ export function WhoToFollow() {
 
   return (
     <div className="rounded-xl border border-border bg-surface p-4 shadow-card">
-      <p className="mb-3 text-base font-bold text-foreground">
+      <p className="mb-5 text-base font-bold text-foreground">
         Recommended users
       </p>
       <div className="space-y-3">

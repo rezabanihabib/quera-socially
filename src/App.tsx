@@ -102,15 +102,9 @@ function LoggedInHome() {
         {isError && (
           <div className="rounded-xl border border-danger/30 bg-danger/5 p-4 text-center">
             <p className="text-sm text-danger">
-              {(error as { message?: string })?.message ??
-                "Failed to load feed."}
+              {(error as { message?: string })?.message ?? "Failed to load feed."}
             </p>
-            <Button
-              variant="tertiary"
-              size="sm"
-              className="mt-2"
-              onClick={() => refetch()}
-            >
+            <Button variant="tertiary" size="sm" className="mt-2" onClick={() => refetch()}>
               Try again
             </Button>
           </div>

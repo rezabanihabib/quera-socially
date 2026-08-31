@@ -1,10 +1,11 @@
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Heart, MessageCircle, Trash2 } from "lucide-react";
+import { Heart, ImageOff, MessageCircle, Pencil, Trash2 } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
 import { CommentSection } from "@/components/post/CommentSection";
 import { DeletePostModal } from "@/components/post/DeletePostModal";
+import { EditPostModal } from "@/components/post/EditPostModal";
 import { useDeletePost, useToggleLike } from "@/hooks/usePosts";
 import { useAuthStore } from "@/store/authStore";
 import { cn, displayHandle, isPostLikedByUser, timeAgo } from "@/lib/utils";
@@ -20,6 +21,8 @@ export function PostCard({ post }: { post: Post }) {
 
   const [showComments, setShowComments] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
 
   const toggleLike = useToggleLike();
   const deletePost = useDeletePost();
@@ -27,47 +30,51 @@ export function PostCard({ post }: { post: Post }) {
   return (
     <article className="rounded-xl border border-border bg-surface p-4 shadow-card transition-colors">
       <div className="flex items-start justify-between">
-        <Link
-          to={`/profile/${post.author.username}`}
-          className="flex items-center gap-3"
-        >
+        <Link to={`/profile/${post.author.username}`} className="flex items-center gap-3">
           <Avatar src={post.author.avatar} name={post.author.name} size="md" />
           <div className="flex flex-wrap items-baseline gap-x-1.5">
-            <span className="text-sm font-semibold text-foreground">
-              {post.author.name}
-            </span>
-            <span className="text-xs text-muted-foreground">
-              @{displayHandle(post.author)}
-            </span>
-            <span className="text-xs text-muted-foreground">
-              {timeAgo(post.createdAt)}
-            </span>
+            <span className="text-sm font-semibold text-foreground">{post.author.name}</span>
+            <span className="text-xs text-muted-foreground">@{displayHandle(post.author)}</span>
+            <span className="text-xs text-muted-foreground">{timeAgo(post.createdAt)}</span>
           </div>
         </Link>
 
         {isOwner && (
-          <button
-            onClick={() => setConfirmDelete(true)}
-            aria-label="Delete post"
-            className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-danger/10 hover:text-danger"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setEditOpen(true)}
+              aria-label="Edit post"
+              className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground"
+            >
+              <Pencil className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => setConfirmDelete(true)}
+              aria-label="Delete post"
+              className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-danger/10 hover:text-danger"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
         )}
       </div>
 
-      {post.content && (
-        <p className="mt-3 whitespace-pre-wrap text-sm text-foreground">
-          {post.content}
-        </p>
-      )}
+      {post.content && <p className="mt-3 whitespace-pre-wrap text-sm text-foreground">{post.content}</p>}
 
       {post.image && (
-        <img
-          src={post.image}
-          alt="post attachment"
-          className="mt-3 max-h-96 w-full rounded-lg object-cover"
-        />
+        imageFailed ? (
+          <div className="mt-3 flex h-40 w-full flex-col items-center justify-center gap-1.5 rounded-lg bg-muted text-muted-foreground">
+            <ImageOff className="h-6 w-6" />
+            <span className="text-xs">Image unavailable</span>
+          </div>
+        ) : (
+          <img
+            src={post.image}
+            alt="post attachment"
+            className="mt-3 max-h-96 w-full rounded-lg object-cover"
+            onError={() => setImageFailed(true)}
+          />
+        )
       )}
 
       <div className="mt-3 flex items-center gap-4">
@@ -87,7 +94,7 @@ export function PostCard({ post }: { post: Post }) {
             "flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium transition-colors",
             isLiked
               ? "text-like"
-              : "text-muted-foreground hover:bg-surface-hover hover:text-foreground",
+              : "text-muted-foreground hover:bg-surface-hover hover:text-foreground"
           )}
         >
           <Heart className={cn("h-4 w-4", isLiked && "fill-like")} />
@@ -101,7 +108,7 @@ export function PostCard({ post }: { post: Post }) {
             showComments && "bg-accent/15",
             showComments
               ? "text-accent"
-              : "text-muted-foreground hover:bg-surface-hover hover:text-foreground",
+              : "text-muted-foreground hover:bg-surface-hover hover:text-foreground"
           )}
         >
           <MessageCircle
@@ -111,9 +118,7 @@ export function PostCard({ post }: { post: Post }) {
         </button>
       </div>
 
-      {showComments && (
-        <CommentSection postId={post.id} comments={post.comments} />
-      )}
+      {showComments && <CommentSection postId={post.id} comments={post.comments} />}
 
       <DeletePostModal
         open={confirmDelete}
@@ -125,6 +130,10 @@ export function PostCard({ post }: { post: Post }) {
           })
         }
       />
+
+      {editOpen && (
+        <EditPostModal open={editOpen} onClose={() => setEditOpen(false)} post={post} />
+      )}
     </article>
   );
 }

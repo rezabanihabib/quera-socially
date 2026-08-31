@@ -1,7 +1,7 @@
 import axios, { type AxiosError } from "axios";
 import type { ApiError } from "../types";
 
-const Url = "https://socially-nextjs-six.vercel.app";
+const Url = "https://localhost:3000";
 
 export const api = axios.create({
   baseURL: Url,

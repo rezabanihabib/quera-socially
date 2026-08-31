@@ -1,7 +1,7 @@
 import { api } from "@/api/axiosInstance";
 import { normalizePost } from "@/api/postsApi";
 import { useAuthStore } from "@/store/authStore";
-import { generateUsernameFromEmail, isUserFollowedByMe } from "@/lib/utils";
+import { generateUsernameFromEmail, isUserFollowedByMe, resolveImageUrl } from "@/lib/utils";
 import type { Post, UpdateProfilePayload, User } from "@/types";
 
 function findFirstArray(value: any): any[] | null {
@@ -48,7 +48,7 @@ export const normalizeUser = (user: any): User => ({
     user.uid ??
     user.name?.toLowerCase().replace(/\s+/g, ""),
 
-  avatar: user.avatar ?? user.image ?? null,
+  avatar: resolveImageUrl(user.avatar ?? user.image),
 
   followersCount:
     user._count?.followers ??
@@ -146,6 +146,7 @@ export const usersApi = {
       bio: raw.bio ?? payload.bio ?? base.bio,
       location: raw.location ?? payload.location ?? base.location,
       website: raw.website ?? payload.website ?? base.website,
+      avatar: raw.avatar ?? raw.image ?? payload.image ?? base.avatar,
     });
   },
 
@@ -215,5 +216,55 @@ export const usersApi = {
     }
 
     return raw.map((item) => normalizePost(item?.post ?? item));
+  },
+
+  search: async (query: string): Promise<User[]> => {
+    const { data } = await api.get("/api/users/search", {
+      params: { q: query },
+    });
+
+    const raw: any[] =
+      (Array.isArray(data) && data) ||
+      (Array.isArray(data?.users) && data.users) ||
+      (Array.isArray(data?.data) && data.data) ||
+      (Array.isArray(data?.data?.users) && data.data.users) ||
+      findFirstArray(data) ||
+      [];
+
+    return raw.map(normalizeUser);
+  },
+
+  getFollowers: async (userId: string): Promise<User[]> => {
+    const { data } = await api.get(`/api/users/${userId}/followers`);
+
+    const raw: any[] =
+      (Array.isArray(data) && data) ||
+      (Array.isArray(data?.followers) && data.followers) ||
+      (Array.isArray(data?.data) && data.data) ||
+      (Array.isArray(data?.data?.followers) && data.data.followers) ||
+      findFirstArray(data) ||
+      [];
+
+    return raw.map((item) => normalizeUser(item?.follower ?? item?.user ?? item));
+  },
+
+  getFollowings: async (userId: string): Promise<User[]> => {
+    const { data } = await api.get(`/api/users/${userId}/followings`);
+
+    const raw: any[] =
+      (Array.isArray(data) && data) ||
+      (Array.isArray(data?.followings) && data.followings) ||
+      (Array.isArray(data?.data) && data.data) ||
+      (Array.isArray(data?.data?.followings) && data.data.followings) ||
+      findFirstArray(data) ||
+      [];
+
+  
+    const isOwnList = useAuthStore.getState().user?.id === userId;
+
+    return raw.map((item) => {
+      const user = normalizeUser(item?.following ?? item?.user ?? item);
+      return isOwnList ? { ...user, isFollowedByMe: true } : user;
+    });
   },
 };
