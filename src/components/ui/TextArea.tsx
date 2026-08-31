@@ -13,10 +13,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label
-            htmlFor={areaId}
-            className="text-sm font-medium text-foreground"
-          >
+          <label htmlFor={areaId} className="text-sm font-medium text-foreground">
             {label}
           </label>
         )}
@@ -29,23 +26,22 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
                   "w-full resize-none bg-transparent text-sm text-foreground",
                   "placeholder:text-muted-foreground",
                   "focus:outline-none",
-                  "transition-colors",
+                  "transition-colors"
                 )
               : cn(
                   "w-full resize-none rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground",
                   "placeholder:text-muted-foreground",
                   "focus:border-foreground/40 focus:ring-1 focus:ring-foreground/20",
                   "transition-colors",
-                  error &&
-                    "border-danger focus:border-danger focus:ring-danger/30",
+                  error && "border-danger focus:border-danger focus:ring-danger/30"
                 ),
-            className,
+            className
           )}
           {...props}
         />
         {error && <span className="text-xs text-danger">{error}</span>}
       </div>
     );
-  },
+  }
 );
 TextArea.displayName = "TextArea";

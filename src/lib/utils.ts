@@ -45,6 +45,15 @@ export function getInitial(name?: string | null): string {
   return name.trim()[0].toUpperCase();
 }
 
+const UPLOADCARE_CDN_BASE = "https://79gcelddzk.ucarecd.net";
+
+export function resolveImageUrl(value?: string | null): string | null {
+  if (!value) return null;
+  if (value.toLowerCase().includes("avatar-placeholder")) return null;
+  if (/^https?:\/\//i.test(value)) return value;
+  return `${UPLOADCARE_CDN_BASE}/${value}/`;
+}
+
 export function formatJoinDate(dateInput: string | number | Date): string {
   const date = new Date(dateInput);
   if (Number.isNaN(date.getTime())) return "";

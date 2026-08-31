@@ -62,6 +62,7 @@ export interface UpdateProfilePayload {
   bio?: string;
   location?: string;
   website?: string;
+  image?: string;
 }
 
 export interface ApiError {

@@ -1,8 +1,5 @@
 import { Bell } from "lucide-react";
-import {
-  useNotifications,
-  useMarkNotificationsRead,
-} from "@/hooks/useNotifications";
+import { useNotifications, useMarkNotificationsRead } from "@/hooks/useNotifications";
 import { NotificationItem } from "@/components/notifications/NotificationItem";
 import { ProfileCardMini } from "@/components/profile/ProfileCardMini";
 import { EmptyState, Skeleton } from "@/components/ui/Feedback";
@@ -13,8 +10,7 @@ export default function Notifications() {
   const { data: notifications, isLoading } = useNotifications();
   const markRead = useMarkNotificationsRead();
 
-  const unreadIds =
-    notifications?.filter((n) => !n.read).map((n) => n.id) ?? [];
+  const unreadIds = notifications?.filter((n) => !n.read).map((n) => n.id) ?? [];
   const unreadCount = unreadIds.length;
 
   return (
@@ -27,9 +23,7 @@ export default function Notifications() {
         <div className="mb-3 flex items-center justify-between gap-3">
           <h1 className="text-base font-bold text-foreground">Notifications</h1>
           <div className="flex items-center gap-3">
-            <span className="text-xs text-muted-foreground">
-              {unreadCount} unread
-            </span>
+            <span className="text-xs text-muted-foreground">{unreadCount} unread</span>
             {unreadCount > 0 && (
               <button
                 type="button"
@@ -58,11 +52,7 @@ export default function Notifications() {
         )}
 
         {!isLoading && notifications?.length === 0 && (
-          <EmptyState
-            icon={Bell}
-            title="No notifications yet"
-            description="You're all caught up."
-          />
+          <EmptyState icon={Bell} title="No notifications yet" description="You're all caught up." />
         )}
 
         <div className="divide-y divide-border">

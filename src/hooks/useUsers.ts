@@ -45,6 +45,32 @@ export function useRecommendedUsers() {
   });
 }
 
+export function useSearchUsers(query: string) {
+  const trimmed = query.trim();
+  return useQuery({
+    queryKey: ["users", "search", trimmed],
+    queryFn: () => usersApi.search(trimmed),
+    enabled: trimmed.length > 0,
+    staleTime: 15 * 1000,
+  });
+}
+
+export function useFollowers(userId: string | undefined, enabled = true) {
+  return useQuery({
+    queryKey: ["users", userId, "followers"],
+    queryFn: () => usersApi.getFollowers(userId as string),
+    enabled: Boolean(userId) && enabled,
+  });
+}
+
+export function useFollowings(userId: string | undefined, enabled = true) {
+  return useQuery({
+    queryKey: ["users", userId, "followings"],
+    queryFn: () => usersApi.getFollowings(userId as string),
+    enabled: Boolean(userId) && enabled,
+  });
+}
+
 export function useToggleFollow() {
   const queryClient = useQueryClient();
   const setUser = useAuthStore((s) => s.setUser);
@@ -81,11 +107,6 @@ export function useToggleFollow() {
             : old,
         );
       }
-      // Note: on follow (nextFollowed === true) we deliberately do NOT remove
-      // the user from the recommended list here. The row stays visible with
-      // a pending spinner (see WhoToFollow) until the mutation succeeds, at
-      // which point onSuccess invalidates the list and a fresh recommendation
-      // replaces it.
 
       const previousMe = useAuthStore.getState().user;
       if (previousMe) {
@@ -98,6 +119,19 @@ export function useToggleFollow() {
         };
         setUser(updatedMe);
         queryClient.setQueryData(["session"], updatedMe);
+
+        queryClient.setQueryData<User[]>(
+          ["users", previousMe.id, "followings"],
+          (old) => {
+            if (!old) return old;
+            if (nextFollowed) {
+              return old.some((u) => u.id === user.id)
+                ? old
+                : [...old, { ...user, isFollowedByMe: true }];
+            }
+            return old.filter((u) => u.id !== user.id);
+          },
+        );
       }
 
       return { user, previousMe };
@@ -115,6 +149,10 @@ export function useToggleFollow() {
       if (context?.previousMe) {
         setUser(context.previousMe);
         queryClient.setQueryData(["session"], context.previousMe);
+        // Roll back the optimistic followings-list change from onMutate.
+        queryClient.invalidateQueries({
+          queryKey: ["users", context.previousMe.id, "followings"],
+        });
       }
       toast.error(error.message || "Could not update follow status.");
     },

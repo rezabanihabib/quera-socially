@@ -70,7 +70,7 @@ export default function ProfilePage() {
               "flex-1 rounded-md py-2 text-sm font-semibold transition-colors",
               tab === "posts"
                 ? "bg-surface text-foreground shadow-card"
-                : "text-muted-foreground hover:text-foreground",
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             Posts
@@ -81,7 +81,7 @@ export default function ProfilePage() {
               "flex-1 rounded-md py-2 text-sm font-semibold transition-colors",
               tab === "likes"
                 ? "bg-surface text-foreground shadow-card"
-                : "text-muted-foreground hover:text-foreground",
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             Likes
