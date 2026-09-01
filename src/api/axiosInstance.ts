@@ -1,7 +1,7 @@
 import axios, { type AxiosError } from "axios";
 import type { ApiError } from "../types";
 
-const Url = "http://localhost:3000/";
+const Url = import.meta.env.VITE_API_URL;
 
 export const api = axios.create({
   baseURL: Url,
