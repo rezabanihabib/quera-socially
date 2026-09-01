@@ -1,1 +1,169 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap");
+
+:root {
+  /* Dark theme (default) */
+  --color-background: 10 10 10; /* 0A0A0A */
+  --color-foreground: 250 250 250; /* FAFAFA */
+  --color-surface: 23 23 23; /* 171717 */
+  --color-surface-hover: 38 38 40; /* 262628 */
+  --color-border: 46 46 48;
+  --color-muted: 38 38 40; /* 262628 */
+  --color-muted-foreground: 163 163 163;
+
+  --btn-primary-bg: 250 250 250; /* FAFAFA */
+  --btn-primary-fg: 10 10 10; /* 0A0A0A */
+  --btn-primary-hover-bg: 230 230 230;
+
+  --btn-secondary-bg: 10 10 10; /* 0A0A0A */
+  --btn-secondary-fg: 255 255 255; /* FFFFFF */
+  --btn-secondary-hover-bg: 23 23 23; /* 171717 */
+
+  --btn-tertiary-bg: 38 38 40; /* 262628 */
+  --btn-tertiary-fg: 229 229 229; /* E5E5E5 */
+}
+
+.light {
+  --color-background: 255 255 255;
+  --color-foreground: 10 10 10;
+  --color-surface: 255 255 255;
+  --color-surface-hover: 245 245 245;
+  --color-border: 229 229 229; /* E5E5E5 */
+  --color-muted: 245 245 245;
+  --color-muted-foreground: 115 115 115;
+
+  --btn-primary-bg: 10 10 10;
+  --btn-primary-fg: 255 255 255;
+  --btn-primary-hover-bg: 23 23 23;
+
+  --btn-secondary-bg: 255 255 255;
+  --btn-secondary-fg: 10 10 10;
+  --btn-secondary-hover-bg: 245 245 245;
+
+  --btn-tertiary-bg: 229 229 229;
+  --btn-tertiary-fg: 38 38 40;
+}
+
+@theme inline {
+  --color-background: rgb(var(--color-background));
+  --color-foreground: rgb(var(--color-foreground));
+
+  --color-surface: rgb(var(--color-surface));
+  --color-surface-hover: rgb(var(--color-surface-hover));
+
+  --color-border: rgb(var(--color-border));
+
+  --color-muted: rgb(var(--color-muted));
+  --color-muted-foreground: rgb(var(--color-muted-foreground));
+
+  --color-primary: rgb(var(--btn-primary-bg));
+  --color-primary-foreground: rgb(var(--btn-primary-fg));
+  --color-primary-hover: rgb(var(--btn-primary-hover-bg));
+
+  --color-secondary: rgb(var(--btn-secondary-bg));
+  --color-secondary-foreground: rgb(var(--btn-secondary-fg));
+  --color-secondary-hover: rgb(var(--btn-secondary-hover-bg));
+
+  --color-tertiary: rgb(var(--btn-tertiary-bg));
+  --color-tertiary-foreground: rgb(var(--btn-tertiary-fg));
+
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+
+  --color-accent: #3b82f6;
+  --color-like: #ef4444;
+
+  --radius-xl: 0.875rem;
+  --radius-2xl: 1.25rem;
+
+  --shadow-card: 0 1px 2px 0 rgb(0 0 0 / 0.06);
+  --shadow-modal: 0 20px 50px -12px rgb(0 0 0 / 0.4);
+
+  --animate-fade-in: fade-in 0.15s ease-out;
+  --animate-slide-up: slide-up 0.2s ease-out;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+* {
+  border-color: rgb(var(--color-border));
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+.font-logo {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* Skeleton shimmer */
+.skeleton {
+  background-image: linear-gradient(
+    90deg,
+    rgb(var(--color-muted)) 0px,
+    rgb(var(--color-surface-hover)) 40px,
+    rgb(var(--color-muted)) 80px
+  );
+  background-size: 800px 100%;
+  @apply animate-shimmer rounded-md;
+}
+
+/* Thin scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--color-border));
+  border-radius: 999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+textarea:focus,
+input:focus {
+  outline: none;
+}
