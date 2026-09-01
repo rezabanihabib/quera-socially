@@ -149,7 +149,7 @@ export function useToggleFollow() {
       if (context?.previousMe) {
         setUser(context.previousMe);
         queryClient.setQueryData(["session"], context.previousMe);
-        // Roll back the optimistic followings-list change from onMutate.
+
         queryClient.invalidateQueries({
           queryKey: ["users", context.previousMe.id, "followings"],
         });

@@ -37,7 +37,6 @@ export function useDeletePost() {
   return useMutation({
     mutationFn: (postId: string) => postsApi.deletePost(postId),
     onSuccess: (_data, postId) => {
-      // Remove from every cached list that might contain it (feed + profile tabs)
       queryClient.setQueriesData<Post[]>({ queryKey: ["posts"] }, (old) =>
         Array.isArray(old) ? old.filter((p) => p.id !== postId) : old,
       );
@@ -174,6 +173,11 @@ export function useAddComment() {
           : old;
       queryClient.setQueriesData<Post[]>({ queryKey: ["posts"] }, updater);
       queryClient.setQueriesData<Post[]>({ queryKey: ["users"] }, updater);
+
+      if (comment.id.startsWith("temp-")) {
+        queryClient.invalidateQueries({ queryKey: ["posts"] });
+        queryClient.invalidateQueries({ queryKey: ["users"] });
+      }
     },
     onError: (error: ApiError) =>
       toast.error(error.message || "Could not add comment."),

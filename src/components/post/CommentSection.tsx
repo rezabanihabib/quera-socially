@@ -5,7 +5,11 @@ import { Avatar } from "@/components/ui/Avatar";
 import { TextArea } from "@/components/ui/TextArea";
 import { Button } from "@/components/ui/Button";
 import { LinkButton } from "@/components/ui/LinkButton";
-import { useAddComment, useDeleteComment, useUpdateComment } from "@/hooks/usePosts";
+import {
+  useAddComment,
+  useDeleteComment,
+  useUpdateComment,
+} from "@/hooks/usePosts";
 import { useAuthStore } from "@/store/authStore";
 import { displayHandle, timeAgo } from "@/lib/utils";
 import type { Comment } from "@/types";
@@ -19,7 +23,14 @@ interface CommentSectionProps {
 
 function CommentRow({ postId, comment }: { postId: string; comment: Comment }) {
   const user = useAuthStore((s) => s.user);
-  const isOwner = Boolean(user?.id) && user?.id === comment.author?.id;
+
+  const userEmail = user?.email?.trim().toLowerCase();
+  const commentAuthorEmail = comment.author?.email?.trim().toLowerCase();
+  const isOwner =
+    Boolean(
+      userEmail && commentAuthorEmail && userEmail === commentAuthorEmail,
+    ) ||
+    Boolean(user?.id && comment.author?.id && user.id === comment.author.id);
 
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(comment.content);
@@ -38,7 +49,7 @@ function CommentRow({ postId, comment }: { postId: string; comment: Comment }) {
     }
     updateComment.mutate(
       { postId, commentId: comment.id, content: trimmed },
-      { onSuccess: () => setIsEditing(false) }
+      { onSuccess: () => setIsEditing(false) },
     );
   };
 
@@ -49,13 +60,23 @@ function CommentRow({ postId, comment }: { postId: string; comment: Comment }) {
 
   return (
     <div className="mb-3 flex gap-2.5">
-      <Avatar src={comment.author.avatar} name={comment.author.name} size="sm" />
+      <Avatar
+        src={comment.author.avatar}
+        name={comment.author.name}
+        size="sm"
+      />
       <div className="flex-1 rounded-lg bg-muted px-3 py-2">
         <div className="flex items-baseline justify-between gap-2">
           <div className="flex flex-wrap items-baseline gap-x-2">
-            <span className="text-xs font-semibold text-foreground">{comment.author.name}</span>
-            <span className="text-[11px] text-muted-foreground">@{displayHandle(comment.author)}</span>
-            <span className="text-[11px] text-muted-foreground">· {timeAgo(comment.createdAt)}</span>
+            <span className="text-xs font-semibold text-foreground">
+              {comment.author.name}
+            </span>
+            <span className="text-[11px] text-muted-foreground">
+              @{displayHandle(comment.author)}
+            </span>
+            <span className="text-[11px] text-muted-foreground">
+              · {timeAgo(comment.createdAt)}
+            </span>
           </div>
 
           {isOwner && !isEditing && (
@@ -87,7 +108,11 @@ function CommentRow({ postId, comment }: { postId: string; comment: Comment }) {
               rows={2}
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
-              error={isTooShort ? `At least ${MIN_COMMENT_LENGTH} characters needed` : undefined}
+              error={
+                isTooShort
+                  ? `At least ${MIN_COMMENT_LENGTH} characters needed`
+                  : undefined
+              }
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
@@ -97,7 +122,12 @@ function CommentRow({ postId, comment }: { postId: string; comment: Comment }) {
               }}
             />
             <div className="mt-1.5 flex justify-end gap-2">
-              <Button variant="tertiary" size="sm" onClick={handleCancel} disabled={updateComment.isPending}>
+              <Button
+                variant="tertiary"
+                size="sm"
+                onClick={handleCancel}
+                disabled={updateComment.isPending}
+              >
                 <X className="h-3.5 w-3.5" />
                 Cancel
               </Button>
@@ -139,7 +169,7 @@ export function CommentSection({ postId, comments = [] }: CommentSectionProps) {
       { postId, content: trimmed },
       {
         onSuccess: () => setContent(""),
-      }
+      },
     );
   };
 
@@ -158,7 +188,11 @@ export function CommentSection({ postId, comments = [] }: CommentSectionProps) {
               placeholder="Write a comment..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              error={isTooShort ? `At least ${MIN_COMMENT_LENGTH} characters needed` : undefined}
+              error={
+                isTooShort
+                  ? `At least ${MIN_COMMENT_LENGTH} characters needed`
+                  : undefined
+              }
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
@@ -183,10 +217,19 @@ export function CommentSection({ postId, comments = [] }: CommentSectionProps) {
       ) : (
         <div className="flex items-center justify-between gap-3 rounded-lg bg-muted px-4 py-3">
           <div>
-            <p className="text-sm font-semibold text-foreground">You are signed out</p>
-            <p className="text-xs text-muted-foreground">Sign in to write a comment</p>
+            <p className="text-sm font-semibold text-foreground">
+              You are signed out
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Sign in to write a comment
+            </p>
           </div>
-          <LinkButton to="/login" variant="primary" size="sm" className="shrink-0">
+          <LinkButton
+            to="/login"
+            variant="primary"
+            size="sm"
+            className="shrink-0"
+          >
             Sign in
           </LinkButton>
         </div>

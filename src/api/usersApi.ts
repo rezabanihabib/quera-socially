@@ -153,8 +153,6 @@ export const usersApi = {
   getRecommended: async (): Promise<User[]> => {
     const { data } = await api.get("/api/users/recommend");
 
-    console.log("RECOMMENDED USERS API RESPONSE:", data);
-
     let users: any[] = [];
 
     if (Array.isArray(data)) {

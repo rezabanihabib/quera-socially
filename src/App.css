@@ -130,6 +130,10 @@ body {
     color 0.2s ease;
 }
 
+button:not(:disabled) {
+  cursor: pointer;
+}
+
 .font-logo {
   font-family: "JetBrains Mono", ui-monospace, monospace;
 }
