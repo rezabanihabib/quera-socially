@@ -66,8 +66,6 @@ export const notificationsApi = {
   getAll: async (): Promise<AppNotification[]> => {
     const { data } = await api.get("/api/notifications");
 
-    console.log("NOTIFICATIONS API RESPONSE:", data);
-
     let notifications: any[] = [];
 
     if (Array.isArray(data)) {

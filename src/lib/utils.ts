@@ -45,7 +45,7 @@ export function getInitial(name?: string | null): string {
   return name.trim()[0].toUpperCase();
 }
 
-const UPLOADCARE_CDN_BASE = "https://79gcelddzk.ucarecd.net";
+const UPLOADCARE_CDN_BASE = "https://1p5nep1spk.ucarecd.net";
 
 export function resolveImageUrl(value?: string | null): string | null {
   if (!value) return null;

@@ -17,7 +17,9 @@ export interface User {
 export interface Comment {
   id: string;
   content: string;
-  author: Pick<User, "id" | "username" | "name" | "avatar">;
+  author: Pick<User, "id" | "username" | "name" | "avatar"> & {
+    email?: string;
+  };
   createdAt: string;
 }
 

@@ -21,6 +21,9 @@ type RawComment = {
   content?: string;
   createdAt?: string;
   author?: RawAuthor;
+  authorId?: string;
+  userId?: string;
+  postId?: string;
 };
 
 type RawPost = {
@@ -52,7 +55,9 @@ type RawPost = {
 function normalizeAuthor(
   author: RawAuthor | undefined,
   fallbackId?: string,
-): Pick<Post["author"], "id" | "username" | "name" | "avatar"> {
+): Pick<Post["author"], "id" | "username" | "name" | "avatar"> & {
+  email?: string;
+} {
   const id =
     author?.id ??
     (author as any)?._id ??
@@ -71,6 +76,7 @@ function normalizeAuthor(
       "user",
     name: author?.name ?? author?.username ?? "User",
     avatar: resolveImageUrl(author?.avatar ?? author?.image),
+    email: author?.email,
   };
 }
 
@@ -79,7 +85,8 @@ function normalizeComment(comment: RawComment): Comment {
     id: comment.id ?? "",
     content: comment.content ?? "",
     createdAt: comment.createdAt ?? new Date().toISOString(),
-    author: normalizeAuthor(comment.author),
+    
+    author: normalizeAuthor(comment.author, comment.authorId ?? comment.userId),
   };
 }
 
@@ -128,8 +135,6 @@ export const postsApi = {
   getFeed: async (): Promise<Post[]> => {
     const { data } = await api.get("/api/posts");
 
-    console.log("POSTS API RESPONSE:", data);
-
     let posts: RawPost[] = [];
 
     if (Array.isArray(data)) {
@@ -160,11 +165,8 @@ export const postsApi = {
     image?: string;
   }): Promise<Post> => {
     try {
-      console.log("SENDING CREATE POST:", payload);
 
       const { data } = await api.post("/api/posts", payload);
-
-      console.log("CREATE POST SUCCESS:", data);
 
       const rawPost = data?.data?.post ?? data?.post ?? data?.data ?? data;
 
