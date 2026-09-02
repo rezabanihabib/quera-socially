@@ -22,6 +22,8 @@ export function ProfileHeader({ profile }: { profile: User }) {
       <h1 className="mt-3 text-xl font-bold text-foreground">{profile.name}</h1>
       <p className="text-sm text-muted-foreground">{displayHandle(profile)}</p>
 
+      {profile.bio && <p className="mt-3 text-sm text-foreground">{profile.bio}</p>}
+
       <div className="mx-auto mt-4 grid max-w-xs grid-cols-3 gap-2">
         <button
           type="button"
@@ -76,8 +78,6 @@ export function ProfileHeader({ profile }: { profile: User }) {
           {formatJoinDate(profile.createdAt)}
         </div>
       </div>
-
-      {profile.bio && <p className="mt-3 text-sm text-foreground">{profile.bio}</p>}
 
       {isOwnProfile && (
         <EditProfileModal open={editOpen} onClose={() => setEditOpen(false)} user={profile} />

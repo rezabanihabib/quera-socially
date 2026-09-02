@@ -128,12 +128,18 @@ export function Navbar() {
                 </button>
               </>
             ) : (
-              <Link
-                to="/login"
-                className="inline-flex h-9 items-center justify-center rounded-lg bg-secondary px-4 text-sm font-medium text-secondary-foreground transition-colors hover:bg-secondary-hover"
-              >
-                Sign in
-              </Link>
+              <>
+                <NavLink to="/" className={navLinkClass} end>
+                  <Home className="h-4 w-4" />
+                  <span>Home</span>
+                </NavLink>
+                <Link
+                  to="/login"
+                  className="inline-flex h-9 items-center justify-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
+                >
+                  Sign in
+                </Link>
+              </>
             )}
           </div>
         </div>
