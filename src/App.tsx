@@ -51,10 +51,16 @@ function LoggedOutHome() {
           Login to access your profile and connect with others.
         </p>
         <div className="mt-5 flex flex-col gap-2">
-          <LinkButton to="/login" variant="secondary" className="w-full">
+          <LinkButton
+            to="/login"
+            className="w-full bg-neutral-100 text-neutral-900 hover:bg-neutral-200"
+          >
             Log In
           </LinkButton>
-          <LinkButton to="/register" variant="outline" className="w-full">
+          <LinkButton
+            to="/register"
+            className="w-full bg-neutral-800 text-white hover:bg-neutral-700"
+          >
             Sign Up
           </LinkButton>
         </div>
